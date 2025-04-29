@@ -1,6 +1,6 @@
 [package]
 name = "cargo-set-version"
-version = "0.0.1"
+version = "0.0.2"
 edition = "2024"
 description = "A Cargo subcommand to set versions for crates in a workspace."
 license = "MIT"
