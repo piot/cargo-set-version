@@ -1,7 +1,7 @@
 [package]
 name = "cargo-set-version"
 version = "0.0.1"
-edition = "2021"
+edition = "2024"
 description = "A Cargo subcommand to set versions for crates in a workspace."
 license = "MIT"
 repository = "https://github.com/piot/cargo-set-version"
@@ -13,6 +13,6 @@ categories = [
 keywords = ["cargo", "dependencies"]
 
 [dependencies]
-toml_edit = "0.22.22"
-cargo_metadata = "0.18.1"
-anyhow = "1.0.91"
+toml_edit = "0.22.26"
+cargo_metadata = "0.19.2"
+anyhow = "1.0.98"
