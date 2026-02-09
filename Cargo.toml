@@ -1,6 +1,6 @@
 [package]
 name = "cargo-set-version"
-version = "0.0.2"
+version = "0.0.3"
 edition = "2024"
 description = "A Cargo subcommand to set versions for crates in a workspace."
 license = "MIT"
@@ -13,7 +13,7 @@ categories = [
 keywords = ["cargo", "dependencies"]
 
 [dependencies]
-toml_edit = "0.22.26"
-cargo_metadata = "0.19.2"
-anyhow = "1.0.98"
+toml_edit = "0.23"
+cargo_metadata = "0.23"
+anyhow = "1.0"
 semver = "1.0"
