@@ -4,6 +4,7 @@
  */
 use anyhow::{Result, anyhow};
 use cargo_metadata::MetadataCommand;
+use cargo_set_version::{ensure_version_increase, parse_new_version};
 use std::collections::{HashMap, HashSet};
 use std::env;
 use std::fs;
@@ -68,6 +69,8 @@ fn main() -> Result<()> {
         std::process::exit(1);
     };
 
+    let new_version = parse_new_version(&arguments.new_version)?;
+
     let mut start = MetadataCommand::new();
     let cmd = if let Some(path) = arguments.manifest_path {
         start.manifest_path(path)
@@ -101,7 +104,8 @@ fn main() -> Result<()> {
 
         if let Some(package_table) = doc.get_mut("package") {
             if let Some(version) = package_table.get_mut("version") {
-                *version = toml_edit::value(arguments.new_version.to_string());
+                ensure_version_increase(&new_version, &package.version, &package.name)?;
+                *version = toml_edit::value(new_version.to_string());
                 updated = true;
             }
         } else {
