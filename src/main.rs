@@ -115,20 +115,17 @@ fn main() -> Result<()> {
         let dependency_sections = ["dependencies", "dev-dependencies", "build-dependencies"];
 
         for section in &dependency_sections {
-            if let Some(dependencies) = doc.get_mut(section) {
-                if let Some(table) = dependencies.as_table_like_mut() {
-                    for (dep_name, dep_item) in table.iter_mut() {
-                        if package_names.contains(dep_name.get()) {
-                            if let Some(dep_table) = dep_item.as_inline_table_mut() {
-                                dep_table.insert(
-                                    "version",
-                                    Value::from(arguments.new_version.to_string()),
-                                );
-                                updated = true;
-                            } else if dep_item.is_str() {
-                                *dep_item = toml_edit::value(arguments.new_version.to_string());
-                                updated = true;
-                            }
+            if let Some(dependencies) = doc.get_mut(section)
+                && let Some(table) = dependencies.as_table_like_mut()
+            {
+                for (dep_name, dep_item) in table.iter_mut() {
+                    if package_names.contains(dep_name.get()) {
+                        if let Some(dep_table) = dep_item.as_inline_table_mut() {
+                            dep_table.insert("version", Value::from(arguments.new_version.clone()));
+                            updated = true;
+                        } else if dep_item.is_str() {
+                            *dep_item = toml_edit::value(arguments.new_version.clone());
+                            updated = true;
                         }
                     }
                 }
@@ -137,7 +134,7 @@ fn main() -> Result<()> {
 
         if updated {
             fs::write(manifest_path, doc.to_string())?;
-            println!("Updated version in: {}", manifest_path);
+            println!("Updated version in: {manifest_path}");
         }
     }
 
