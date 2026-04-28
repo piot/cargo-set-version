@@ -14,12 +14,14 @@ use toml_edit::{DocumentMut, Value};
 struct Arguments {
     pub manifest_path: Option<PathBuf>,
     pub new_version: String,
+    pub force: bool,
 }
 
 // TODO: Maybe use clap or similar instead of manual parsing?
 fn parse_arguments(in_args: &[String]) -> Option<Arguments> {
     let mut args = in_args.to_vec();
     let mut manifest_path = None;
+    let mut force = false;
     let mut i = 1;
 
     if in_args.len() < 2 {
@@ -36,6 +38,9 @@ fn parse_arguments(in_args: &[String]) -> Option<Arguments> {
                 eprintln!("Error: --manifest-path requires a value");
                 return None;
             }
+        } else if args[i] == "--force" {
+            force = true;
+            args.remove(i);
         } else {
             i += 1;
         }
@@ -50,6 +55,7 @@ fn parse_arguments(in_args: &[String]) -> Option<Arguments> {
     Some(Arguments {
         manifest_path,
         new_version,
+        force,
     })
 }
 
@@ -104,7 +110,9 @@ fn main() -> Result<()> {
 
         if let Some(package_table) = doc.get_mut("package") {
             if let Some(version) = package_table.get_mut("version") {
-                ensure_version_increase(&new_version, &package.version, &package.name)?;
+                if !arguments.force {
+                    ensure_version_increase(&new_version, &package.version, &package.name)?;
+                }
                 *version = toml_edit::value(new_version.to_string());
                 updated = true;
             }
