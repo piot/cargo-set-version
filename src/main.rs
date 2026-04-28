@@ -69,7 +69,7 @@ fn main() -> Result<()> {
 
     let Some(arguments) = parse_arguments(&args) else {
         eprintln!(
-            "Usage: {} [--manifest-path some/crate/Cargo.toml] <new_version>",
+            "Usage: {} [--manifest-path some/crate/Cargo.toml] [--force] <new_version>",
             args[0]
         );
         std::process::exit(1);
